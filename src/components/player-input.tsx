@@ -22,7 +22,13 @@ const PlayerInput: React.FC<PlayerInputProps> = ({ onPlayerAdd }) => {
         value={playerName}
         onChange={(e) => setPlayerName(e.target.value)}
       />
-      <button onClick={handleAddPlayer}>Add Player</button>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={handleAddPlayer}
+      >
+        Add Player
+      </button>
     </div>
   );
 };
