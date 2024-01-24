@@ -1,5 +1,11 @@
 # Disc golf putting game in react
 
+[putting-game](https://bang0123.github.io/putting-game/)
+
+deploy using: `npm run deploy`
+
+[gh-pages](https://github.com/gitname/react-gh-pages)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
