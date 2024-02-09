@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { Player } from "./lib/Player";
 import { PuttingGame } from "./lib/PuttingGame";
+import CurrentPlayerInfo from "./components/current-player-info";
 
 const App: React.FC = () => {
   const gameStorageKey = "discGolfPuttingGame";
@@ -217,38 +218,7 @@ const App: React.FC = () => {
               game.players[currentPlayerIndex] && (
                 <Row>
                   <Col>
-                    <Row className="mb-1">
-                      <h3>
-                        Playing{" "}
-                        <span style={{ fontWeight: "bold" }}>{maxRounds}</span>{" "}
-                        rounds
-                      </h3>
-                    </Row>
-                    <Row className="mb-1">
-                      <p>
-                        Current Round:{" "}
-                        <span style={{ fontWeight: "bold" }}>
-                          {currentRound}
-                        </span>
-                      </p>
-                    </Row>
-                    <Row className="mb-1">
-                      <p>
-                        Current Player:{" "}
-                        <span style={{ fontWeight: "bold" }}>
-                          {game.players[currentPlayerIndex].name}
-                        </span>
-                      </p>
-                    </Row>
-                    <Row className="mb-1">
-                      <p>
-                        Current Distance:{" "}
-                        <span style={{ fontWeight: "bold" }}>
-                          {game.players[currentPlayerIndex].distance}
-                        </span>
-                      </p>
-                    </Row>
-
+                    <CurrentPlayerInfo player={game.players[currentPlayerIndex]} maxRounds={maxRounds} currentRound={currentRound} />
                     <DistanceSelector
                       score={game.players[currentPlayerIndex].score}
                       onScoreUpdate={handleScoreUpdate}
