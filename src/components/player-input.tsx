@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 
 interface PlayerInputProps {
   onPlayerAdd: (playerName: string) => void;
@@ -15,21 +16,25 @@ const PlayerInput: React.FC<PlayerInputProps> = ({ onPlayerAdd }) => {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Enter player name"
-        value={playerName}
-        onChange={(e) => setPlayerName(e.target.value)}
-      />
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={handleAddPlayer}
-      >
-        Add Player
-      </button>
-    </div>
+    <Row>
+      <Col>
+        <Form>
+          <Form.Group controlId="playerName">
+            <Form.Control
+              type="text"
+              placeholder="Enter player name"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+            />
+          </Form.Group>
+        </Form>
+      </Col>
+      <Col>
+        <Button variant="primary" type="button" onClick={handleAddPlayer}>
+          Add Player
+        </Button>
+      </Col>
+    </Row>
   );
 };
 

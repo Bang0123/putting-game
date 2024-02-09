@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PlayerInput from "./player-input";
 import DistanceSelector from "./distance-selector";
 import MaxRoundsInput from "./max-rounds-input";
+import { Button, Col, Row, Table } from "react-bootstrap";
 
 interface Player {
   id: string;
@@ -103,96 +104,119 @@ const Scorecard: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Disc Golf Putting game</h1>
-      {isGameRunning && (
-        <div>
-          <button type="button" className="btn btn-warning" onClick={stopGame}>
-            End Game
-          </button>
-        </div>
-      )}
-      {!isGameRunning && (
-        <div>
-          <PlayerInput onPlayerAdd={handlePlayerAdd} />
-          <MaxRoundsInput onMaxRoundsAdd={handleMaxRoundsSet} />
-        </div>
-      )}
-      <div>
-        <h2>Players</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Score</th>
-              {!isGameRunning && <th>Action</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {players.map((player, index) => (
-              <tr key={index} onClick={() => handlePlayerSelect(player)}>
-                <td
-                  style={
-                    isGameRunning && index === currentPlayerIndex
-                      ? { fontWeight: "bold" }
-                      : {}
-                  }
-                >
-                  {player.name}
-                </td>
-                <td>{player.score}</td>
-                {!isGameRunning && (
-                  <td>
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => handlePlayerRemove(player)}
-                    >
-                      Remove
-                    </button>
-                  </td>
-                )}
+    <Row>
+      <Row>
+        {isGameRunning && (
+          <Row className="mb-5">
+            <Col>
+              <Button variant="warning" onClick={stopGame}>
+                End Game
+              </Button>
+            </Col>
+          </Row>
+        )}
+        {!isGameRunning && (
+          <Row>
+            <Col>
+              <Row className="mb-3">
+                <PlayerInput onPlayerAdd={handlePlayerAdd} />
+              </Row>
+              <Row className="mb-4">
+                <MaxRoundsInput onMaxRoundsAdd={handleMaxRoundsSet} />
+              </Row>
+            </Col>
+          </Row>
+        )}
+      </Row>
+      <Row className="mb-4">
+        <Col>
+          <h2>Players</h2>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Score</th>
+                {!isGameRunning && <th>Action</th>}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {players.map((player, index) => (
+                <tr key={index} onClick={() => handlePlayerSelect(player)}>
+                  <td
+                    style={
+                      isGameRunning && index === currentPlayerIndex
+                        ? { fontWeight: "bold" }
+                        : {}
+                    }
+                  >
+                    {player.name}
+                  </td>
+                  <td>{player.score}</td>
+                  {!isGameRunning && (
+                    <td>
+                      <Button
+                        variant="danger"
+                        onClick={() => handlePlayerRemove(player)}
+                      >
+                        Remove
+                      </Button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Col>
+      </Row>
       {!isGameRunning && (
-        <div>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => startGame()}
-          >
-            Start game
-          </button>
-        </div>
+        <Row className="mb-4">
+          <Col>
+            <Button variant="primary" onClick={() => startGame()}>
+              Start game
+            </Button>
+          </Col>
+        </Row>
       )}
       {isGameRunning &&
         currentRound < maxRounds &&
         players.length > 0 &&
         players[currentPlayerIndex] && (
-          <div>
-            <h3>Playing {maxRounds} rounds</h3>
-            <p>Current Round: {currentRound}</p>
-            <p>Current Player: {players[currentPlayerIndex].name}</p>
-            <p>Current Distance: {players[currentPlayerIndex].distance}</p>
-            <p>Current Score: {players[currentPlayerIndex].score}</p>
-            <DistanceSelector
-              score={players[currentPlayerIndex].score}
-              onScoreUpdate={handleScoreUpdate}
-            />
-          </div>
+          <Row>
+            <Col>
+              <Row>
+                <h3>Playing {maxRounds} rounds</h3>
+              </Row>
+              <Row>
+                <p>Current Round: {currentRound}</p>
+              </Row>
+              <Row>
+                <p>Current Player: {players[currentPlayerIndex].name}</p>
+              </Row>
+              <Row>
+                <p>Current Distance: {players[currentPlayerIndex].distance}</p>
+              </Row>
+              <Row>
+                <p>Current Score: {players[currentPlayerIndex].score}</p>
+              </Row>
+              
+              <DistanceSelector
+                score={players[currentPlayerIndex].score}
+                onScoreUpdate={handleScoreUpdate}
+              />
+            </Col>
+          </Row>
         )}
       {isGameRunning && currentRound === maxRounds && (
-        <div>
-          <p>Game Over!</p>
-          <button type="button" className="btn btn-primary" onClick={stopGame}>
-            End Game
-          </button>
-        </div>
+        <Row className="mb-5">
+          <Col>
+            <p>Game Over!</p>
+            <Button variant="primary" onClick={stopGame}>
+              End Game
+            </Button>
+          </Col>
+        </Row>
       )}
-    </div>
+    </Row>
   );
 };
 
