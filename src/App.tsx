@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PlayerInput from "./components/player-input";
-import DistanceSelector from "./components/distance-selector";
-import MaxRoundsInput from "./components/max-rounds-input";
 import {
   Button,
   Col,
@@ -10,9 +7,11 @@ import {
   Table,
   ThemeProvider,
 } from "react-bootstrap";
-import { Player } from "./lib/Player";
-import { PuttingGame } from "./lib/PuttingGame";
+import { Player, PuttingGame } from "./lib";
 import CurrentPlayerInfo from "./components/current-player-info";
+import DistanceSelector from "./components/distance-selector";
+import MaxRoundsInput from "./components/max-rounds-input";
+import PlayerInput from "./components/player-input";
 
 const App: React.FC = () => {
   const gameStorageKey = "discGolfPuttingGame";
