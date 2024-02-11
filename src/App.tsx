@@ -4,7 +4,6 @@ import {
   Col,
   Container,
   Row,
-  Table,
   ThemeProvider,
 } from "react-bootstrap";
 import { Player, PuttingGame } from "./lib";
@@ -12,6 +11,7 @@ import CurrentPlayerInfo from "./components/current-player-info";
 import DistanceSelector from "./components/distance-selector";
 import MaxRoundsInput from "./components/max-rounds-input";
 import PlayerInput from "./components/player-input";
+import PlayerCard from "./components/player-card";
 
 const App: React.FC = () => {
   const gameStorageKey = "discGolfPuttingGame";
@@ -160,47 +160,27 @@ const App: React.FC = () => {
               )}
             </Row>
             <Row className="mb-4">
-              <Col>
-                <h2>Players</h2>
-                <Table striped bordered hover>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Score</th>
-                      {!isGameRunning && <th>Action</th>}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {game.players.map((player, index) => (
-                      <tr
-                        key={index}
-                        onClick={() => handlePlayerSelect(player)}
-                      >
-                        <td
-                          style={
-                            isGameRunning && index === currentPlayerIndex
-                              ? { fontWeight: "bold" }
-                              : {}
-                          }
-                        >
-                          {player.name}
-                        </td>
-                        <td>{player.score}</td>
-                        {!isGameRunning && (
-                          <td>
-                            <Button
-                              variant="danger"
-                              onClick={() => handlePlayerRemove(player)}
-                            >
-                              Remove
-                            </Button>
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </Col>
+               <h2>Players</h2>
+              {game.players.map((player, index) => (
+                <Row
+                  key={index}
+                  className="mb-2"
+                  onClick={() => handlePlayerSelect(player)}
+                >
+                  <PlayerCard
+                    isGameRunning={isGameRunning}
+                    player={player}
+                    isSelected={isGameRunning && index === currentPlayerIndex}
+                  >
+                    <Button
+                      variant="danger"
+                      onClick={() => handlePlayerRemove(player)}
+                    >
+                      Remove
+                    </Button>
+                  </PlayerCard>
+                </Row>
+              ))}
             </Row>
             {!isGameRunning && (
               <Row className="mb-4">
@@ -217,7 +197,11 @@ const App: React.FC = () => {
               game.players[currentPlayerIndex] && (
                 <Row>
                   <Col>
-                    <CurrentPlayerInfo player={game.players[currentPlayerIndex]} maxRounds={maxRounds} currentRound={currentRound} />
+                    <CurrentPlayerInfo
+                      player={game.players[currentPlayerIndex]}
+                      maxRounds={maxRounds}
+                      currentRound={currentRound}
+                    />
                     <DistanceSelector
                       score={game.players[currentPlayerIndex].score}
                       onScoreUpdate={handleScoreUpdate}

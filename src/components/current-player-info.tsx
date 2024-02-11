@@ -1,6 +1,8 @@
 import React from "react";
 import { Row } from "react-bootstrap";
 import { Player } from "../lib/Player";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRuler } from "@fortawesome/free-solid-svg-icons";
 
 interface CurrentPlayerInfoProps {
   player: Player;
@@ -34,7 +36,7 @@ const CurrentPlayerInfo: React.FC<CurrentPlayerInfoProps> = ({
       </Row>
       <Row className="mb-1">
         <p>
-          Current Distance:{" "}
+          <FontAwesomeIcon icon={faRuler} /> Distance:{" "}
           <span style={{ fontWeight: "bold" }}>{player.distance}</span>
         </p>
       </Row>
