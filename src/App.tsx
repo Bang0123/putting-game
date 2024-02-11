@@ -31,7 +31,6 @@ const App: React.FC = () => {
   const [isGameRunning, setIsGameRunning] = useState(false);
 
   useEffect(() => {
-    // Save game to local storage whenever game are updated
     localStorage.setItem(gameStorageKey, JSON.stringify(game));
   }, [game]);
 
@@ -72,7 +71,7 @@ const App: React.FC = () => {
     player.roundscores.push({
       distance: player.distance,
       hits: newScore,
-      amount: 5,
+      throws: 5,
       round: player.roundscores.length + 1,
     } as RoundScore);
 
@@ -140,10 +139,10 @@ const App: React.FC = () => {
     >
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ maxWidth: "600px", minWidth: "300px" }}>
-          <Container className="App">
+          <Container className="App" fluid>
             <Row className="mb-3 mt-3">
               <Col>
-                <h1>Disc Golf Putting game</h1>
+                <h1>DiscGolf Putting game</h1>
               </Col>
             </Row>
             <Row className="mb-3">
@@ -176,7 +175,9 @@ const App: React.FC = () => {
                     <Col>
                       <h2>Players</h2>
                     </Col>
-                    <Col style={{display:'flex', justifyContent:'flex-end'}}>
+                    <Col
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
                       <h2>
                         <span style={{ fontWeight: "bold" }}>{maxRounds}</span>{" "}
                         Rounds
@@ -196,14 +197,8 @@ const App: React.FC = () => {
                           isGameRunning && index === currentPlayerIndex
                         }
                         maxRounds={maxRounds}
-                      >
-                        <Button
-                          variant="danger"
-                          onClick={() => handlePlayerRemove(player)}
-                        >
-                          Remove
-                        </Button>
-                      </PlayerCard>
+                        handleRemoval={handlePlayerRemove}
+                      />
                     </Row>
                   ))}
                 </Row>

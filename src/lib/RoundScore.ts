@@ -1,6 +1,6 @@
 export interface RoundScore {
   hits: number;
-  amount: number;
+  throws: number;
   distance: number;
   round: number;
 }

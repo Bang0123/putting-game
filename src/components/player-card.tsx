@@ -1,35 +1,69 @@
-import React, { ReactNode } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import React from "react";
+import { Button, Card, Col, Row, Stack } from "react-bootstrap";
 import { Player } from "../lib/Player";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookmark as solidBookmark,
   faUser,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as outlinedBookmark } from "@fortawesome/free-regular-svg-icons";
+import { ThrowStat } from "../lib/ThrowStat";
 
 interface PlayerCardProps {
   player: Player;
   isSelected: boolean;
   isGameRunning: boolean;
-  children: ReactNode;
   maxRounds: number;
+  handleRemoval: (player: Player) => void;
 }
 
 const CurrentPlayerInfo: React.FC<PlayerCardProps> = ({
   player,
   isSelected,
   isGameRunning,
-  children,
-  maxRounds
+  maxRounds,
+  handleRemoval,
 }) => {
+  const calculateStats = (num: number) =>
+    player.roundscores
+      .filter((x) => x.distance === num)
+      .reduce(
+        (a, b) => {
+          const fuck: ThrowStat = {
+            distance: num,
+            hits: a.hits + b.hits,
+            throws: a.throws + b.throws,
+          };
+          return fuck;
+        },
+        { distance: num, hits: 0, throws: 0 } as ThrowStat
+      );
+
   const isDone = player.roundscores.length >= maxRounds && isGameRunning;
+  const stats = [5, 6, 7, 8, 9, 10].map(calculateStats);
+
   return (
-    <Card bg={isDone ? 'secondary' : undefined} border={isSelected ? "primary" : "dark"} className="m-2">
+    <Card
+      bg={isDone ? "secondary" : undefined}
+      border={isSelected ? "primary" : "dark"}
+      className="m-2"
+    >
       <Card.Body>
         <Card.Title>
-          <Row>
-            <Col>
+          <Stack direction="horizontal" gap={3}>
+            {!isGameRunning && (
+              <div className="p-2">
+                <p>
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    color="red"
+                    onClick={() => handleRemoval(player)}
+                  />
+                </p>
+              </div>
+            )}
+            <div className="p-2">
               <p>
                 <FontAwesomeIcon
                   icon={
@@ -44,27 +78,45 @@ const CurrentPlayerInfo: React.FC<PlayerCardProps> = ({
                   {player.name}
                 </span>
               </p>
-            </Col>
-            <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+            </div>
+            <div
+              className="p-2 ms-auto"
+              style={{ display: "flex", justifyContent: "flex-end" }}
+            >
               <p>
                 <span style={isSelected ? { fontWeight: "bold" } : {}}>
                   {player.score}
                 </span>
               </p>
-            </Col>
-          </Row>
+            </div>
+          </Stack>
         </Card.Title>
-        {!isGameRunning && (
-          <Card.Subtitle className="mb-1">{children}</Card.Subtitle>
-        )}
-        {/* <Row>
-          <Col>5</Col>
-          <Col>6</Col>
-          <Col>7</Col>
-          <Col>8</Col>
-          <Col>9</Col>
-          <Col>10</Col>
-        </Row> */}
+
+        <Row className="mb-0">
+          {player.roundscores.length !== 0 && stats.map((stat) => (
+            <Col style={{ display: "flex", justifyContent: "center" }}>
+              <div>
+                <Row>
+                  <p>
+                    <strong>{stat.distance}</strong>
+                  </p>
+                </Row>
+                {stat.throws > 0 && (
+                  <div>
+                    <Row>
+                      <p>
+                        {stat.hits}/{stat.throws}
+                      </p>
+                    </Row>
+                    <Row>
+                      <p>{Math.floor((stat.hits / stat.throws) * 100)}%</p>
+                    </Row>
+                  </div>
+                )}
+              </div>
+            </Col>
+          ))}
+        </Row>
       </Card.Body>
     </Card>
   );
