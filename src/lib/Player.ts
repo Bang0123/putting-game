@@ -6,6 +6,5 @@ export interface Player {
   distance: number;
   score: number;
   round: number;
-  roundhits: number[];
   roundscores: RoundScore[];
 }

@@ -13,6 +13,7 @@ interface PlayerCardProps {
   isSelected: boolean;
   isGameRunning: boolean;
   children: ReactNode;
+  maxRounds: number;
 }
 
 const CurrentPlayerInfo: React.FC<PlayerCardProps> = ({
@@ -20,9 +21,11 @@ const CurrentPlayerInfo: React.FC<PlayerCardProps> = ({
   isSelected,
   isGameRunning,
   children,
+  maxRounds
 }) => {
+  const isDone = player.roundscores.length >= maxRounds && isGameRunning;
   return (
-    <Card border={isSelected ? "primary" : "dark"} className="m-2">
+    <Card bg={isDone ? 'secondary' : undefined} border={isSelected ? "primary" : "dark"} className="m-2">
       <Card.Body>
         <Card.Title>
           <Row>

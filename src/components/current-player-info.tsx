@@ -1,44 +1,35 @@
 import React from "react";
-import { Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { Player } from "../lib/Player";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRuler } from "@fortawesome/free-solid-svg-icons";
 
 interface CurrentPlayerInfoProps {
   player: Player;
-  maxRounds: number;
-  currentRound: number;
 }
 
-const CurrentPlayerInfo: React.FC<CurrentPlayerInfoProps> = ({
-  player,
-  maxRounds,
-  currentRound,
-}) => {
+const CurrentPlayerInfo: React.FC<CurrentPlayerInfoProps> = ({ player }) => {
   return (
     <div>
-      <Row className="mb-1">
-        <h3>
-          Playing <span style={{ fontWeight: "bold" }}>{maxRounds}</span> rounds
-        </h3>
+      <Row className="mb-2">
+        <Col>
+          <h4>
+            Player:{" "}
+            <span style={{ fontWeight: "bold" }}>{player.name}</span>
+          </h4>
+        </Col>
+        <Col>
+          <h4>
+            Round:{" "}
+            <span style={{ fontWeight: "bold" }}>{player.round + 1}</span>
+          </h4>
+        </Col>
       </Row>
-      <Row className="mb-1">
-        <p>
-          Current Round:{" "}
-          <span style={{ fontWeight: "bold" }}>{currentRound}</span>
-        </p>
-      </Row>
-      <Row className="mb-1">
-        <p>
-          Current Player:{" "}
-          <span style={{ fontWeight: "bold" }}>{player.name}</span>
-        </p>
-      </Row>
-      <Row className="mb-1">
-        <p>
-          <FontAwesomeIcon icon={faRuler} /> Distance:{" "}
+      <Row className="mb-2">
+        <h4>
+          <FontAwesomeIcon icon={faRuler} />{" "}Distance:{" "}
           <span style={{ fontWeight: "bold" }}>{player.distance}</span>
-        </p>
+        </h4>
       </Row>
     </div>
   );

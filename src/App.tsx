@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Row,
-  ThemeProvider,
-} from "react-bootstrap";
-import { Player, PuttingGame } from "./lib";
+import { Button, Col, Container, Row, ThemeProvider } from "react-bootstrap";
+import { Player, PuttingGame, RoundScore } from "./lib";
 import CurrentPlayerInfo from "./components/current-player-info";
 import DistanceSelector from "./components/distance-selector";
 import MaxRoundsInput from "./components/max-rounds-input";
@@ -33,7 +27,7 @@ const App: React.FC = () => {
   const [game, setGame] = useState<PuttingGame>(initializeGame);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [maxRounds, setMaxRounds] = useState(5);
-  const [currentRound, setCurrentRound] = useState(0);
+  const [currentRound, setCurrentRound] = useState(1);
   const [isGameRunning, setIsGameRunning] = useState(false);
 
   useEffect(() => {
@@ -52,8 +46,7 @@ const App: React.FC = () => {
             name: playerName,
             distance: 10,
             score: 0,
-            round: 1,
-            roundhits: [],
+            round: 0,
             roundscores: [],
           } as Player,
         ],
@@ -74,18 +67,28 @@ const App: React.FC = () => {
 
   const handleScoreUpdate = (newScore: number) => {
     const updatedPlayers = [...game.players];
-    updatedPlayers[currentPlayerIndex].score +=
-      updatedPlayers[currentPlayerIndex].distance * newScore;
-    updatedPlayers[currentPlayerIndex].distance = 5 + newScore;
-    updatedPlayers[currentPlayerIndex].roundhits.push(newScore);
-    updatedPlayers[currentPlayerIndex].round =
-      updatedPlayers[currentPlayerIndex].roundhits.length;
+    const player = updatedPlayers[currentPlayerIndex];
+
+    player.roundscores.push({
+      distance: player.distance,
+      hits: newScore,
+      amount: 5,
+      round: player.roundscores.length + 1,
+    } as RoundScore);
+
+    player.round = player.roundscores.length;
+    player.distance = 5 + newScore;
+    player.score = player.roundscores.reduce((pv, cv) => {
+      return pv + cv.distance * cv.hits;
+    }, 0);
+
     setGame({ ...game, players: updatedPlayers });
 
     let lowestRound = Math.min.apply(
       null,
       game.players.map((x) => x.round)
     );
+
     const nextPlayerIndex = game.players.indexOf(
       game.players.find((p) => p.round === lowestRound) as Player
     );
@@ -98,6 +101,10 @@ const App: React.FC = () => {
   };
 
   const handlePlayerSelect = (selectedPlayer: Player) => {
+    if (selectedPlayer.roundscores.length >= maxRounds) {
+      return;
+    }
+
     setCurrentPlayerIndex(game.players.indexOf(selectedPlayer));
   };
 
@@ -105,15 +112,18 @@ const App: React.FC = () => {
     localStorage.setItem(gameStorageKey, JSON.stringify(game));
     setIsGameRunning(true);
     setCurrentPlayerIndex(0);
-    setCurrentRound(0);
+    setCurrentRound(1);
     setMaxRounds(maxRounds);
-    const resetPlayers = game.players.map((player) => ({
-      ...player,
-      distance: 10,
-      score: 0,
-      round: 1,
-      roundhits: [],
-    }));
+    const resetPlayers = game.players.map(
+      (player) =>
+        ({
+          ...player,
+          distance: 10,
+          score: 0,
+          round: 0,
+          roundscores: [],
+        } as Player)
+    );
     setGame({ ...game, players: resetPlayers });
   };
 
@@ -128,100 +138,115 @@ const App: React.FC = () => {
       breakpoints={["xxxl", "xxl", "xl", "lg", "md", "sm", "xs", "xxs"]}
       minBreakpoint="xxs"
     >
-      <Container className="App" fluid>
-        <Row className="mb-3 mt-3">
-          <Col>
-            <h1>Disc Golf Putting game</h1>
-          </Col>
-        </Row>
-        <Row className="mb-3">
-          <Col>
-            <Row>
-              {isGameRunning && (
-                <Row className="mb-5">
-                  <Col>
-                    <Button variant="warning" onClick={stopGame}>
-                      End Game
-                    </Button>
-                  </Col>
-                </Row>
-              )}
-              {!isGameRunning && (
-                <Row>
-                  <Col>
-                    <Row className="mb-3">
-                      <PlayerInput onPlayerAdd={handlePlayerAdd} />
-                    </Row>
-                    <Row className="mb-4">
-                      <MaxRoundsInput onMaxRoundsAdd={handleMaxRoundsSet} />
-                    </Row>
-                  </Col>
-                </Row>
-              )}
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ maxWidth: "600px", minWidth: "300px" }}>
+          <Container className="App">
+            <Row className="mb-3 mt-3">
+              <Col>
+                <h1>Disc Golf Putting game</h1>
+              </Col>
             </Row>
-            <Row className="mb-4">
-               <h2>Players</h2>
-              {game.players.map((player, index) => (
-                <Row
-                  key={index}
-                  className="mb-2"
-                  onClick={() => handlePlayerSelect(player)}
-                >
-                  <PlayerCard
-                    isGameRunning={isGameRunning}
-                    player={player}
-                    isSelected={isGameRunning && index === currentPlayerIndex}
-                  >
-                    <Button
-                      variant="danger"
-                      onClick={() => handlePlayerRemove(player)}
+            <Row className="mb-3">
+              <Col>
+                <Row>
+                  {isGameRunning && (
+                    <Row className="mb-5">
+                      <Col>
+                        <Button variant="warning" onClick={stopGame}>
+                          End Game
+                        </Button>
+                      </Col>
+                    </Row>
+                  )}
+                  {!isGameRunning && (
+                    <Row>
+                      <Col>
+                        <Row className="mb-3">
+                          <PlayerInput onPlayerAdd={handlePlayerAdd} />
+                        </Row>
+                        <Row className="mb-4">
+                          <MaxRoundsInput onMaxRoundsAdd={handleMaxRoundsSet} />
+                        </Row>
+                      </Col>
+                    </Row>
+                  )}
+                </Row>
+                <Row className="mb-4">
+                  <Row className="mb-1">
+                    <Col>
+                      <h2>Players</h2>
+                    </Col>
+                    <Col style={{display:'flex', justifyContent:'flex-end'}}>
+                      <h2>
+                        <span style={{ fontWeight: "bold" }}>{maxRounds}</span>{" "}
+                        Rounds
+                      </h2>
+                    </Col>
+                  </Row>
+                  {game.players.map((player, index) => (
+                    <Row
+                      key={index}
+                      className="mb-2"
+                      onClick={() => handlePlayerSelect(player)}
                     >
-                      Remove
-                    </Button>
-                  </PlayerCard>
+                      <PlayerCard
+                        isGameRunning={isGameRunning}
+                        player={player}
+                        isSelected={
+                          isGameRunning && index === currentPlayerIndex
+                        }
+                        maxRounds={maxRounds}
+                      >
+                        <Button
+                          variant="danger"
+                          onClick={() => handlePlayerRemove(player)}
+                        >
+                          Remove
+                        </Button>
+                      </PlayerCard>
+                    </Row>
+                  ))}
                 </Row>
-              ))}
+                {!isGameRunning && (
+                  <Row className="mb-4">
+                    <Col>
+                      <Button variant="primary" onClick={() => startGame()}>
+                        Start game
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+                {isGameRunning &&
+                  currentRound < maxRounds &&
+                  game.players.length > 0 &&
+                  game.players[currentPlayerIndex] && (
+                    <Row>
+                      <Col>
+                        <CurrentPlayerInfo
+                          player={game.players[currentPlayerIndex]}
+                        />
+                        <DistanceSelector
+                          score={game.players[currentPlayerIndex].score}
+                          onScoreUpdate={handleScoreUpdate}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+                {isGameRunning && currentRound === maxRounds && (
+                  <Row className="mb-5">
+                    <Col>
+                      <h2>Game Over!</h2>
+                      <Button variant="primary" onClick={stopGame}>
+                        End Game
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+              </Col>
             </Row>
-            {!isGameRunning && (
-              <Row className="mb-4">
-                <Col>
-                  <Button variant="primary" onClick={() => startGame()}>
-                    Start game
-                  </Button>
-                </Col>
-              </Row>
-            )}
-            {isGameRunning &&
-              currentRound < maxRounds &&
-              game.players.length > 0 &&
-              game.players[currentPlayerIndex] && (
-                <Row>
-                  <Col>
-                    <CurrentPlayerInfo
-                      player={game.players[currentPlayerIndex]}
-                      maxRounds={maxRounds}
-                      currentRound={currentRound}
-                    />
-                    <DistanceSelector
-                      score={game.players[currentPlayerIndex].score}
-                      onScoreUpdate={handleScoreUpdate}
-                    />
-                  </Col>
-                </Row>
-              )}
-            {isGameRunning && currentRound === maxRounds && (
-              <Row className="mb-5">
-                <Col>
-                  <p>Game Over!</p>
-                  <Button variant="primary" onClick={stopGame}>
-                    End Game
-                  </Button>
-                </Col>
-              </Row>
-            )}
-          </Col>
-        </Row>
-      </Container>
+          </Container>
+        </div>
+      </div>
     </ThemeProvider>
   );
 };
