@@ -6,6 +6,8 @@ import DistanceSelector from "./components/distance-selector";
 import MaxRoundsInput from "./components/max-rounds-input";
 import PlayerInput from "./components/player-input";
 import PlayerCard from "./components/player-card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 
 const App: React.FC = () => {
   const gameStorageKey = "discGolfPuttingGame";
@@ -68,6 +70,10 @@ const App: React.FC = () => {
     const updatedPlayers = [...game.players];
     const player = updatedPlayers[currentPlayerIndex];
 
+    if (player.roundscores.length >= maxRounds) {
+      return;
+    }
+
     player.roundscores.push({
       distance: player.distance,
       hits: newScore,
@@ -99,11 +105,50 @@ const App: React.FC = () => {
     }
   };
 
-  const handlePlayerSelect = (selectedPlayer: Player) => {
-    if (selectedPlayer.roundscores.length >= maxRounds) {
+  const handleRevertClicked = () => {
+    const updatedPlayers = [...game.players];
+    const player = updatedPlayers[currentPlayerIndex];
+
+    if (player.roundscores.length === 0) {
       return;
     }
 
+    let removedRound = player.roundscores.pop();
+    let didRemove = removedRound !== undefined;
+
+    if (didRemove) {
+      if (player.roundscores.length === 0) {
+        player.distance = 10;
+      } else {
+        let newLast = player.roundscores[player.roundscores.length - 1];
+        player.distance = 5 + newLast.hits;
+      }
+
+      player.round = player.roundscores.length;
+      player.score = player.roundscores.reduce((pv, cv) => {
+        return pv + cv.distance * cv.hits;
+      }, 0);
+
+      setGame({ ...game, players: updatedPlayers });
+
+      let lowestRound = Math.min.apply(
+        null,
+        game.players.map((x) => x.round)
+      );
+
+      const nextPlayerIndex = game.players.indexOf(
+        game.players.find((p) => p.round === lowestRound) as Player
+      );
+      setCurrentPlayerIndex(nextPlayerIndex);
+      setCurrentRound(lowestRound);
+
+      if (game.players.every((x) => x.round === maxRounds)) {
+        stopGame();
+      }
+    }
+  };
+
+  const handlePlayerSelect = (selectedPlayer: Player) => {
     setCurrentPlayerIndex(game.players.indexOf(selectedPlayer));
   };
 
@@ -149,13 +194,42 @@ const App: React.FC = () => {
               <Col>
                 <Row>
                   {isGameRunning && (
-                    <Row className="mb-5">
-                      <Col>
-                        <Button variant="warning" onClick={stopGame}>
-                          End Game
-                        </Button>
-                      </Col>
-                    </Row>
+                    <div>
+                      <Row className="mb-5">
+                        <Col
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-start",
+                          }}
+                        >
+                          <Button variant="warning" onClick={stopGame}>
+                            End Game
+                          </Button>
+                        </Col>
+                        <Col
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <Button
+                            size="lg"
+                            variant="warning"
+                            type="button"
+                            onClick={handleRevertClicked}
+                            disabled={
+                              game.players[currentPlayerIndex].roundscores
+                                .length === 0
+                            }
+                          >
+                            <FontAwesomeIcon
+                              color="white"
+                              icon={faRotateLeft}
+                            />
+                          </Button>
+                        </Col>
+                      </Row>
+                    </div>
                   )}
                   {!isGameRunning && (
                     <Row>
@@ -217,13 +291,21 @@ const App: React.FC = () => {
                   game.players[currentPlayerIndex] && (
                     <Row>
                       <Col>
-                        <CurrentPlayerInfo
-                          player={game.players[currentPlayerIndex]}
-                        />
-                        <DistanceSelector
-                          score={game.players[currentPlayerIndex].score}
-                          onScoreUpdate={handleScoreUpdate}
-                        />
+                        <Row>
+                          <CurrentPlayerInfo
+                            player={game.players[currentPlayerIndex]}
+                            maxRounds={maxRounds}
+                          />
+                        </Row>
+                        <Row>
+                          <DistanceSelector
+                            onScoreUpdate={handleScoreUpdate}
+                            disabled={
+                              game.players[currentPlayerIndex].roundscores
+                                .length >= maxRounds
+                            }
+                          />
+                        </Row>
                       </Col>
                     </Row>
                   )}

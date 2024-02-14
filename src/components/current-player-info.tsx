@@ -6,9 +6,11 @@ import { faRuler } from "@fortawesome/free-solid-svg-icons";
 
 interface CurrentPlayerInfoProps {
   player: Player;
+  maxRounds: number;
 }
 
-const CurrentPlayerInfo: React.FC<CurrentPlayerInfoProps> = ({ player }) => {
+const CurrentPlayerInfo: React.FC<CurrentPlayerInfoProps> = ({ player, maxRounds }) => {
+  const round = player.round + 1 >= maxRounds ? maxRounds : player.round + 1;
   return (
     <div>
       <Row className="mb-2">
@@ -21,7 +23,7 @@ const CurrentPlayerInfo: React.FC<CurrentPlayerInfoProps> = ({ player }) => {
         <Col>
           <h4>
             Round:{" "}
-            <span style={{ fontWeight: "bold" }}>{player.round + 1}</span>
+            <span style={{ fontWeight: "bold" }}>{round}</span>
           </h4>
         </Col>
       </Row>

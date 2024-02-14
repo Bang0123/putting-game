@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, Col, Row, Stack } from "react-bootstrap";
+import { Card, Col, Row, Stack } from "react-bootstrap";
 import { Player } from "../lib/Player";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,7 +18,7 @@ interface PlayerCardProps {
   handleRemoval: (player: Player) => void;
 }
 
-const CurrentPlayerInfo: React.FC<PlayerCardProps> = ({
+const PlayerCard: React.FC<PlayerCardProps> = ({
   player,
   isSelected,
   isGameRunning,
@@ -94,7 +94,7 @@ const CurrentPlayerInfo: React.FC<PlayerCardProps> = ({
 
         <Row className="mb-0">
           {player.roundscores.length !== 0 && stats.map((stat) => (
-            <Col style={{ display: "flex", justifyContent: "center" }}>
+            <Col key={stat.distance} style={{ display: "flex", justifyContent: "center" }}>
               <div>
                 <Row>
                   <p>
@@ -122,4 +122,4 @@ const CurrentPlayerInfo: React.FC<PlayerCardProps> = ({
   );
 };
 
-export default CurrentPlayerInfo;
+export default PlayerCard;

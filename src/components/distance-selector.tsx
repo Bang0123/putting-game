@@ -1,14 +1,16 @@
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Button, Row, Col, ButtonGroup, ToggleButton } from "react-bootstrap";
 
 interface DistanceSelectorProps {
-  score: number;
   onScoreUpdate: (newScore: number) => void;
+  disabled: boolean;
 }
 
 const DistanceSelector: React.FC<DistanceSelectorProps> = ({
-  score,
   onScoreUpdate,
+  disabled
 }) => {
   const [selectedScore, setSelectedScore] = useState<number | null>(null);
 
@@ -16,13 +18,12 @@ const DistanceSelector: React.FC<DistanceSelectorProps> = ({
     setSelectedScore(value);
   };
 
-  const handleIt = () => {
+  const handleAddScore = () => {
     if (selectedScore !== null) {
       onScoreUpdate(selectedScore);
       setSelectedScore(null);
     }
   };
-
 
   return (
     <Row>
@@ -37,6 +38,7 @@ const DistanceSelector: React.FC<DistanceSelectorProps> = ({
               size="lg"
               name="radio"
               value={value}
+              disabled={disabled}
               checked={selectedScore === value}
               onChange={(e) => handleScoreChange(+e.currentTarget.value)}
             >
@@ -46,15 +48,15 @@ const DistanceSelector: React.FC<DistanceSelectorProps> = ({
         </ButtonGroup>
       </Row>
       <Row>
-        <Col>
+        <Col style={{ display: "flex", justifyContent: "space-around" }}>
           <Button
             size="lg"
             variant="success"
             type="button"
-            onClick={handleIt}
-            disabled={selectedScore === null}
+            onClick={handleAddScore}
+            disabled={selectedScore === null || disabled}
           >
-            OK
+            <FontAwesomeIcon color="white" icon={faCheck} />
           </Button>
         </Col>
       </Row>
