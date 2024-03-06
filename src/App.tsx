@@ -153,6 +153,10 @@ const App: React.FC = () => {
   };
 
   const startGame = () => {
+    if (game.players.length === 0) {
+      return;
+    }
+
     localStorage.setItem(gameStorageKey, JSON.stringify(game));
     setIsGameRunning(true);
     setCurrentPlayerIndex(0);
