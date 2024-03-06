@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/putting-game/static/css/main.f96f07a4.css",
-    "main.js": "/putting-game/static/js/main.95c4813d.js",
+    "main.js": "/putting-game/static/js/main.bd9a3089.js",
     "static/js/787.575c8ba4.chunk.js": "/putting-game/static/js/787.575c8ba4.chunk.js",
     "index.html": "/putting-game/index.html",
     "main.f96f07a4.css.map": "/putting-game/static/css/main.f96f07a4.css.map",
-    "main.95c4813d.js.map": "/putting-game/static/js/main.95c4813d.js.map",
+    "main.bd9a3089.js.map": "/putting-game/static/js/main.bd9a3089.js.map",
     "787.575c8ba4.chunk.js.map": "/putting-game/static/js/787.575c8ba4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f96f07a4.css",
-    "static/js/main.95c4813d.js"
+    "static/js/main.bd9a3089.js"
   ]
 }
