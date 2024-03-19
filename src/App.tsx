@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Row, ThemeProvider } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Row,
+  ThemeProvider,
+} from "react-bootstrap";
 import { Player, PuttingGame, RoundScore } from "./lib";
 import CurrentPlayerInfo from "./components/current-player-info";
 import DistanceSelector from "./components/distance-selector";
@@ -31,6 +38,7 @@ const App: React.FC = () => {
   const [maxRounds, setMaxRounds] = useState(5);
   const [currentRound, setCurrentRound] = useState(1);
   const [isGameRunning, setIsGameRunning] = useState(false);
+  const [displayNoPlayersError, setDisplayNoPlayersError] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(gameStorageKey, JSON.stringify(game));
@@ -152,8 +160,14 @@ const App: React.FC = () => {
     setCurrentPlayerIndex(game.players.indexOf(selectedPlayer));
   };
 
+  const showNoPlayersError = () => {
+    setDisplayNoPlayersError(true);
+    setTimeout(() => setDisplayNoPlayersError(false), 5000);
+  };
+
   const startGame = () => {
     if (game.players.length === 0) {
+      showNoPlayersError();
       return;
     }
 
@@ -283,9 +297,22 @@ const App: React.FC = () => {
                 {!isGameRunning && (
                   <Row className="mb-4">
                     <Col>
-                      <Button variant="primary" onClick={() => startGame()}>
-                        Start game
-                      </Button>
+                      <Row className="mb-4">
+                        <Col>
+                          <Button variant="primary" onClick={() => startGame()}>
+                            Start game
+                          </Button>
+                        </Col>
+                      </Row>
+                      {displayNoPlayersError && (
+                        <Row>
+                          <Alert variant="danger">
+                            No players added!
+                            <br />
+                            Please add a player to begin.
+                          </Alert>
+                        </Row>
+                      )}
                     </Col>
                   </Row>
                 )}
