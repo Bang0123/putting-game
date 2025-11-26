@@ -17,54 +17,71 @@ const Instructions: React.FC<InstructionProps> = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Setup & Rules
+            <strong>Setup & Rules</strong>
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <h4>Preperation of play</h4>
-          <p>
-            Create 6 stations with distances of 5, 6, 7, 8, 9 and 10 meters from
-            the basket.
-          </p>
-          <p>Use 5 putters of your choice.</p>
-          <h4>Setup of scorecard</h4>
-          <p>
-            Enter a player's Name and tap "Add Player" - Repeat for each player.
-          </p>
-          <p>Enter number of rounds to play and tap "Set Max Rounds"</p>
-          <p>
-            You can remove a player by tapping the red trashcan next to their
-            name.
-          </p>
-          <p>You're ready to play - Tap "Start Game"</p>
-          <h4>Playing and Scoring</h4>
-          <p>
-            Each player takes turn throwing all 5 of their discs from 10 meters,
-            counting the number of successful throws and entering it on the
-            scorecard.
-          </p>
-          <p>
-            To enter a score for a player, tap their name and tap the number of
-            successful throws. Next tap the checkmark button.
-          </p>
-          <p>
-            The scorecard will show which distance each player should play from
-            next turn. The distance is calculated: 5 meters + amount of
-            successful throws = next turn distance
-          </p>
-          <p>
-            Its possible to undo a score by selecting a player and tapping the
-            undo button.
-          </p>
-          <h4>Points</h4>
-          <p>
-            Each successful throw from each distance award the player points
-            equal to the distance they were at. Distance: 10 meters is 10
-            points.
-          </p>
+        <Modal.Body style={{ padding: '2rem' }}>
+          <div style={{ marginBottom: '2rem' }}>
+            <h5 style={{ color: '#0d6efd', marginBottom: '1rem', fontWeight: '600' }}>
+              🎯 Preparation of Play
+            </h5>
+            <p style={{ marginBottom: '0.5rem', lineHeight: '1.6' }}>
+              Create <strong>6 stations</strong> with distances of <strong>5, 6, 7, 8, 9 and 10 meters</strong> from the basket.
+            </p>
+            <p style={{ lineHeight: '1.6' }}>
+              Use <strong>5 putters</strong> of your choice.
+            </p>
+          </div>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <h5 style={{ color: '#0d6efd', marginBottom: '1rem', fontWeight: '600' }}>
+              📋 Setup of Scorecard
+            </h5>
+            <ol style={{ lineHeight: '1.8', paddingLeft: '1.5rem' }}>
+              <li>Enter a player's name and tap <strong>"Add Player"</strong> - Repeat for each player</li>
+              <li>Enter number of rounds to play and tap <strong>"Set Max Rounds"</strong></li>
+              <li>Remove players by tapping the <span style={{ color: '#dc3545' }}>🗑️ red trashcan</span> next to their name</li>
+              <li>When ready, tap <strong>"Start Game"</strong></li>
+            </ol>
+          </div>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <h5 style={{ color: '#0d6efd', marginBottom: '1rem', fontWeight: '600' }}>
+              🎮 Playing and Scoring
+            </h5>
+            <p style={{ marginBottom: '0.75rem', lineHeight: '1.6' }}>
+              Each player takes turn throwing all <strong>5 discs from 10 meters</strong>, counting successful throws.
+            </p>
+            <p style={{ marginBottom: '0.75rem', lineHeight: '1.6' }}>
+              To enter a score: tap the player's name, select the number of successful throws, then tap the <span style={{ color: '#198754' }}>✓ checkmark button</span>.
+            </p>
+            <div style={{ 
+              backgroundColor: 'var(--secondary-bg)', 
+              padding: '1rem', 
+              borderRadius: '8px',
+              marginBottom: '0.75rem'
+            }}>
+              <p style={{ marginBottom: '0', lineHeight: '1.6', fontStyle: 'italic' }}>
+                <strong>Distance Formula:</strong> Next distance = 5 meters + successful throws
+              </p>
+            </div>
+            <p style={{ lineHeight: '1.6' }}>
+              You can undo a score by selecting the player and tapping the <strong>↺ undo button</strong>.
+            </p>
+          </div>
+
+          <div>
+            <h5 style={{ color: '#0d6efd', marginBottom: '1rem', fontWeight: '600' }}>
+              🏆 Points
+            </h5>
+            <p style={{ lineHeight: '1.6' }}>
+              Each successful throw awards <strong>points equal to the distance</strong>.<br/>
+              <em>Example: A successful throw from 10 meters = 10 points</em>
+            </p>
+          </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={props.onHide}>Close</Button>
+          <Button variant="primary" onClick={props.onHide}>Got it!</Button>
         </Modal.Footer>
       </Modal>
     );
