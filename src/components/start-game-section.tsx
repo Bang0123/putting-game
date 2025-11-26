@@ -29,11 +29,30 @@ const StartGameSection: React.FC<StartGameSectionProps> = ({ onStartGame, showEr
         </Row>
         {showError && (
           <Row>
-            <Alert variant="danger" style={{ borderRadius: '8px', fontWeight: '500' }}>
-              ⚠️ No players added!
-              <br />
-              Please add a player to begin.
-            </Alert>
+            <Col>
+              <Alert 
+                variant="danger" 
+                className="d-flex align-items-center"
+                style={{ 
+                  borderRadius: '12px',
+                  fontWeight: '500',
+                  padding: '1rem 1.5rem',
+                  border: '2px solid #dc3545',
+                  backgroundColor: 'var(--secondary-bg)',
+                  boxShadow: '0 2px 8px rgba(220, 53, 69, 0.2)'
+                }}
+              >
+                <span style={{ fontSize: '1.5rem', marginRight: '1rem' }}>⚠️</span>
+                <div>
+                  <strong style={{ display: 'block', marginBottom: '0.25rem', fontSize: '1.1rem' }}>
+                    No players added!
+                  </strong>
+                  <span style={{ fontSize: '0.95rem', opacity: 0.9 }}>
+                    Please add at least one player to begin the game.
+                  </span>
+                </div>
+              </Alert>
+            </Col>
           </Row>
         )}
       </Col>

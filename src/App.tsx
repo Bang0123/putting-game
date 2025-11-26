@@ -167,7 +167,7 @@ const App: React.FC = () => {
 
   const showNoPlayersError = () => {
     setDisplayNoPlayersError(true);
-    setTimeout(() => setDisplayNoPlayersError(false), 5000);
+    setTimeout(() => setDisplayNoPlayersError(false), 8000);
   };
 
   const startGame = () => {
