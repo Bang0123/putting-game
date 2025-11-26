@@ -90,6 +90,41 @@ body {
   color: #ea868f;
 }
 
+[data-theme="dark"] .btn-outline-primary {
+  color: #58a6ff;
+  border-color: #1f6feb;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover,
+[data-theme="dark"] .btn-outline-primary:active,
+[data-theme="dark"] .btn-outline-primary.active {
+  background-color: #1f6feb;
+  border-color: #1f6feb;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .btn-outline-primary:disabled {
+  color: #484f58;
+  border-color: #30363d;
+}
+
+[data-theme="dark"] .btn-success {
+  background-color: #238636;
+  border-color: #238636;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .btn-success:hover {
+  background-color: #2ea043;
+  border-color: #2ea043;
+}
+
+[data-theme="dark"] .btn-success:disabled {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #484f58;
+}
+
 .App {
   background-color: var(--bg-color);
   min-height: 100vh;
