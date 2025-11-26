@@ -13,11 +13,14 @@ import DistanceSelector from "./components/distance-selector";
 import MaxRoundsInput from "./components/max-rounds-input";
 import PlayerInput from "./components/player-input";
 import PlayerCard from "./components/player-card";
+import ThemeToggle from "./components/theme-toggle";
+import ExportButton from "./components/export-button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 
 const App: React.FC = () => {
   const gameStorageKey = "discGolfPuttingGame";
+  const themeStorageKey = "discGolfPuttingGameTheme";
   const initializeGame = () => {
     const savedItem = localStorage.getItem(gameStorageKey);
     if (savedItem != null) {
@@ -39,10 +42,29 @@ const App: React.FC = () => {
   const [currentRound, setCurrentRound] = useState(1);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [displayNoPlayersError, setDisplayNoPlayersError] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem(themeStorageKey);
+    if (savedTheme) {
+      return savedTheme === "dark";
+    }
+    // If no saved preference, use system preference
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
   useEffect(() => {
     localStorage.setItem(gameStorageKey, JSON.stringify(game));
   }, [game]);
+
+  useEffect(() => {
+    const theme = isDarkMode ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.setAttribute("data-bs-theme", theme);
+    localStorage.setItem(themeStorageKey, theme);
+  }, [isDarkMode, themeStorageKey]);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const handlePlayerAdd = (playerName: string) => {
     if (game.players.length <= 10) {
@@ -200,12 +222,28 @@ const App: React.FC = () => {
       breakpoints={["xxxl", "xxl", "xl", "lg", "md", "sm", "xs", "xxs"]}
       minBreakpoint="xxs"
     >
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ 
+        display: "flex", 
+        justifyContent: "center",
+        backgroundColor: "var(--bg-color)",
+        minHeight: "100vh"
+      }}>
         <div style={{ maxWidth: "600px", minWidth: "300px" }}>
           <Container className="App" fluid>
             <Row className="mb-3 mt-3">
               <Col>
                 <h1>DiscGolf Putting game</h1>
+              </Col>
+              <Col
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                <ExportButton game={game} />
+                <ThemeToggle isDarkMode={isDarkMode} onToggle={toggleTheme} />
               </Col>
             </Row>
             <Row className="mb-3">
