@@ -231,21 +231,19 @@ const App: React.FC = () => {
       }}>
         <div style={{ maxWidth: "600px", minWidth: "300px" }}>
           <Container className="App" fluid>
-            <Row className="mb-3 mt-3">
-              <Col>
-                <h1 style={{whiteSpace: "nowrap" }}>DiscGolf Putting game</h1>
+            <Row className="mb-4 mt-4">
+              <Col xs={12} md={6} className="d-flex align-items-center mb-3 mb-md-0">
+                <h1 style={{ 
+                  whiteSpace: "nowrap",
+                  margin: 0,
+                  fontSize: "clamp(1.5rem, 4vw, 2rem)",
+                  fontWeight: "700"
+                }}>
+                  🥏 DiscGolf Putting Game
+                </h1>
               </Col>
-              <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Col xs={12} md={6} className="d-flex justify-content-end align-items-center" style={{ gap: "10px" }}>
                 <Instructions />
-              </Col>
-              <Col
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  gap: "10px",
-                }}
-              >
                 <ExportButton game={game} />
                 <ThemeToggle isDarkMode={isDarkMode} onToggle={toggleTheme} />
               </Col>
@@ -254,24 +252,20 @@ const App: React.FC = () => {
               <Col>
                 <Row>
                   {isGameRunning && (
-                    <div>
-                      <Row className="mb-5">
-                        <Col
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                          }}
-                        >
-                          <Button variant="warning" onClick={stopGame}>
+                    <div style={{
+                      backgroundColor: 'var(--secondary-bg)',
+                      padding: '1.5rem',
+                      borderRadius: '12px',
+                      marginBottom: '2rem',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}>
+                      <Row>
+                        <Col xs={6} className="d-flex justify-content-start">
+                          <Button variant="warning" onClick={stopGame} style={{ fontWeight: '600' }}>
                             End Game
                           </Button>
                         </Col>
-                        <Col
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                          }}
-                        >
+                        <Col xs={6} className="d-flex justify-content-end">
                           <Button
                             size="lg"
                             variant="warning"
@@ -281,6 +275,7 @@ const App: React.FC = () => {
                               game.players[currentPlayerIndex].roundscores
                                 .length === 0
                             }
+                            title="Undo last score"
                           >
                             <FontAwesomeIcon
                               color="white"
@@ -305,16 +300,20 @@ const App: React.FC = () => {
                   )}
                 </Row>
                 <Row className="mb-4">
-                  <Row className="mb-1">
-                    <Col>
-                      <h2>Players</h2>
+                  <Row className="mb-3" style={{
+                    padding: '0.75rem 1rem',
+                    backgroundColor: 'var(--secondary-bg)',
+                    borderRadius: '8px',
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem'
+                  }}>
+                    <Col className="d-flex align-items-center">
+                      <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '600' }}>👥 Players</h2>
                     </Col>
-                    <Col
-                      style={{ display: "flex", justifyContent: "flex-end" }}
-                    >
-                      <h2>
-                        <span style={{ fontWeight: "bold" }}>{maxRounds}</span>{" "}
-                        Rounds
+                    <Col className="d-flex justify-content-end align-items-center">
+                      <h2 style={{ margin: 0, fontSize: '1.5rem' }}>
+                        <span style={{ fontWeight: "bold", color: '#0d6efd' }}>{maxRounds}</span>{" "}
+                        <span style={{ fontWeight: '400' }}>Rounds</span>
                       </h2>
                     </Col>
                   </Row>
@@ -340,16 +339,26 @@ const App: React.FC = () => {
                   <Row className="mb-4">
                     <Col>
                       <Row className="mb-4">
-                        <Col>
-                          <Button variant="primary" onClick={() => startGame()}>
-                            Start game
+                        <Col className="d-flex justify-content-center">
+                          <Button 
+                            variant="primary" 
+                            size="lg"
+                            onClick={() => startGame()}
+                            style={{ 
+                              fontWeight: '600',
+                              padding: '0.75rem 2.5rem',
+                              borderRadius: '8px',
+                              fontSize: '1.125rem'
+                            }}
+                          >
+                            🎮 Start Game
                           </Button>
                         </Col>
                       </Row>
                       {displayNoPlayersError && (
                         <Row>
-                          <Alert variant="danger">
-                            No players added!
+                          <Alert variant="danger" style={{ borderRadius: '8px', fontWeight: '500' }}>
+                            ⚠️ No players added!
                             <br />
                             Please add a player to begin.
                           </Alert>
@@ -364,30 +373,54 @@ const App: React.FC = () => {
                   game.players[currentPlayerIndex] && (
                     <Row>
                       <Col>
-                        <Row>
-                          <CurrentPlayerInfo
-                            player={game.players[currentPlayerIndex]}
-                            maxRounds={maxRounds}
-                          />
-                        </Row>
-                        <Row>
-                          <DistanceSelector
-                            onScoreUpdate={handleScoreUpdate}
-                            disabled={
-                              game.players[currentPlayerIndex].roundscores
-                                .length >= maxRounds
-                            }
-                          />
-                        </Row>
+                        <div style={{
+                          backgroundColor: 'var(--secondary-bg)',
+                          padding: '1.5rem',
+                          borderRadius: '12px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                        }}>
+                          <Row className="mb-3">
+                            <CurrentPlayerInfo
+                              player={game.players[currentPlayerIndex]}
+                              maxRounds={maxRounds}
+                            />
+                          </Row>
+                          <Row>
+                            <DistanceSelector
+                              onScoreUpdate={handleScoreUpdate}
+                              disabled={
+                                game.players[currentPlayerIndex].roundscores
+                                  .length >= maxRounds
+                              }
+                            />
+                          </Row>
+                        </div>
                       </Col>
                     </Row>
                   )}
                 {isGameRunning && currentRound === maxRounds && (
                   <Row className="mb-5">
-                    <Col>
-                      <h2>Game Over!</h2>
-                      <Button variant="primary" onClick={stopGame}>
-                        End Game
+                    <Col className="text-center" style={{
+                      padding: '3rem 1rem',
+                      backgroundColor: 'var(--secondary-bg)',
+                      borderRadius: '12px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}>
+                      <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', fontWeight: '700' }}>
+                        🏆 Game Over!
+                      </h2>
+                      <Button 
+                        variant="primary" 
+                        size="lg"
+                        onClick={stopGame}
+                        style={{
+                          fontWeight: '600',
+                          padding: '0.75rem 2.5rem',
+                          borderRadius: '8px',
+                          fontSize: '1.125rem'
+                        }}
+                      >
+                        View Results
                       </Button>
                     </Col>
                   </Row>
