@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Col, Row, Stack } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { Player } from "../lib/Player";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -48,75 +48,114 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
       bg={isDone ? "secondary" : undefined}
       border={isSelected ? "primary" : "dark"}
       className="m-2"
+      style={{ cursor: isGameRunning ? "pointer" : "default" }}
     >
-      <Card.Body>
-        <Card.Title>
-          <Stack direction="horizontal" gap={3}>
-            {!isGameRunning && (
-              <div className="p-2">
-                <p>
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    color="red"
-                    onClick={() => handleRemoval(player)}
-                  />
-                </p>
-              </div>
-            )}
-            <div className="p-2">
-              <p>
-                <FontAwesomeIcon
-                  icon={
-                    isGameRunning
-                      ? isSelected
-                        ? solidBookmark
-                        : outlinedBookmark
-                      : faUser
-                  }
-                />{" "}
-                <span style={isSelected ? { fontWeight: "bold" } : {}}>
-                  {player.name}
-                </span>
-              </p>
-            </div>
-            <div
-              className="p-2 ms-auto"
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <p>
-                <span style={isSelected ? { fontWeight: "bold" } : {}}>
-                  {player.score}
-                </span>
-              </p>
-            </div>
-          </Stack>
-        </Card.Title>
+      <Card.Body style={{ padding: '1.25rem' }}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          marginBottom: player.roundscores.length !== 0 ? '1rem' : '0'
+        }}>
+          {!isGameRunning && (
+            <FontAwesomeIcon
+              icon={faTrash}
+              style={{ 
+                color: '#dc3545',
+                cursor: 'pointer',
+                fontSize: '1.1rem',
+                marginRight: '1rem',
+                transition: 'transform 0.2s'
+              }}
+              onClick={() => handleRemoval(player)}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            />
+          )}
+          <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+            <FontAwesomeIcon
+              icon={
+                isGameRunning
+                  ? isSelected
+                    ? solidBookmark
+                    : outlinedBookmark
+                  : faUser
+              }
+              style={{ 
+                marginRight: '0.75rem',
+                fontSize: '1.25rem',
+                color: isSelected ? '#0d6efd' : undefined
+              }}
+            />
+            <span style={{ 
+              fontWeight: isSelected ? "700" : "600",
+              fontSize: '1.125rem',
+              color: 'var(--text-color)'
+            }}>
+              {player.name}
+            </span>
+          </div>
+          <div style={{ 
+            fontSize: '1.5rem',
+            fontWeight: '700',
+            color: isSelected ? '#0d6efd' : 'var(--text-color)',
+            minWidth: '50px',
+            textAlign: 'right'
+          }}>
+            {player.score}
+          </div>
+        </div>
 
-        <Row className="mb-0">
-          {player.roundscores.length !== 0 && stats.map((stat) => (
-            <Col key={stat.distance} style={{ display: "flex", justifyContent: "center" }}>
-              <div>
-                <Row>
-                  <p>
-                    <strong>{stat.distance}</strong>
-                  </p>
-                </Row>
+        {player.roundscores.length !== 0 && (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gap: '0.5rem',
+            marginTop: '1rem',
+            paddingTop: '1rem',
+            borderTop: '1px solid var(--bs-border-color)'
+          }}>
+            {stats.map((stat) => (
+              <div 
+                key={stat.distance} 
+                style={{ 
+                  textAlign: 'center',
+                  padding: '0.5rem 0.25rem',
+                  backgroundColor: stat.throws > 0 ? 'var(--secondary-bg)' : 'transparent',
+                  borderRadius: '6px',
+                  transition: 'background-color 0.2s'
+                }}
+              >
+                <div style={{ 
+                  fontSize: '0.875rem',
+                  fontWeight: '700',
+                  color: '#6c757d',
+                  marginBottom: '0.25rem'
+                }}>
+                  {stat.distance}m
+                </div>
                 {stat.throws > 0 && (
-                  <div>
-                    <Row>
-                      <p>
-                        {stat.hits}/{stat.throws}
-                      </p>
-                    </Row>
-                    <Row>
-                      <p>{Math.floor((stat.hits / stat.throws) * 100)}%</p>
-                    </Row>
-                  </div>
+                  <>
+                    <div style={{ 
+                      fontSize: '0.875rem',
+                      fontWeight: '600',
+                      color: 'var(--text-color)',
+                      marginBottom: '0.125rem'
+                    }}>
+                      {stat.hits}/{stat.throws}
+                    </div>
+                    <div style={{ 
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      color: stat.hits / stat.throws >= 0.6 ? '#198754' : stat.hits / stat.throws >= 0.4 ? '#ffc107' : '#dc3545'
+                    }}>
+                      {Math.floor((stat.hits / stat.throws) * 100)}%
+                    </div>
+                  </>
                 )}
               </div>
-            </Col>
-          ))}
-        </Row>
+            ))}
+          </div>
+        )}
       </Card.Body>
     </Card>
   );
