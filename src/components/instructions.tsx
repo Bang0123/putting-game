@@ -81,9 +81,9 @@ const Instructions: React.FC<InstructionProps> = () => {
         }}
       >
         <FontAwesomeIcon
-          color="black"
           icon={faCircleQuestion}
           onClick={() => setModalShow(true)}
+          style={{ cursor: "pointer", color: "var(--text-color)" }}
         />
       </Col>
       <Col>
