@@ -17,6 +17,7 @@ import ThemeToggle from "./components/theme-toggle";
 import ExportButton from "./components/export-button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import Instructions from "./components/instructions";
 
 const App: React.FC = () => {
   const gameStorageKey = "discGolfPuttingGame";
@@ -232,7 +233,10 @@ const App: React.FC = () => {
           <Container className="App" fluid>
             <Row className="mb-3 mt-3">
               <Col>
-                <h1>DiscGolf Putting game</h1>
+                <h1 style={{whiteSpace: "nowrap" }}>DiscGolf Putting game</h1>
+              </Col>
+              <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Instructions />
               </Col>
               <Col
                 style={{
